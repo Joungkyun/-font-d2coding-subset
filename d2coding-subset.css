@@ -1,0 +1,27 @@
+/* 
+ * D2 coding (Korean) subset https://github.com/Joungkyun/font-d2coding-subset
+ */
+@font-face {
+  font-family: 'D2 coding subset';
+  font-style: normal;
+  font-weight: 400;
+  src: url('D2Coding-subset.eot');
+  src: local('※'), local('D2Coding'),
+       url('D2Coding-subset.eot?#iefix') format('embedded-opentype'),
+       url('D2Coding-subset.woff2') format('x-woff2'),
+       url('D2Coding-subset.woff') format('woff'),
+       url('D2Coding-subset.ttf') format('truetype'),
+       url('D2Coding-subset.svg') format('svg');
+}
+@font-face {
+  font-family: 'D2 coding subset';
+  font-style: normal;
+  font-weight: 700;
+  src: url('D2CodingBold-subset.eot');
+  src: local('※'), local('D2Coding Bold'),
+       url('D2CodingBold-subset.eot?#iefix') format('embedded-opentype'),
+       url('D2CodingBold-subset.woff2') format('x-woff2'),
+       url('D2CodingBold-subset.woff') format('woff'),
+       url('D2CodingBold-subset.ttf') format('truetype'),
+       url('D2CodingBold-subset.svg') format('svg');
+}
