@@ -9,6 +9,8 @@
 ></font-face
 ><missing-glyph horiz-adv-x="500" d=""
 ></missing-glyph
+><glyph unicode="&#x9;" horiz-adv-x="500" d=""
+></glyph
 ><glyph unicode=" " horiz-adv-x="500" d=""
 ></glyph
 ><glyph unicode="!" horiz-adv-x="500" d="M180 727H323L296 209H206L180 727ZM170 75q0 -34 23 -57T250 -5q34 0 57.5 23T331 75q0 34 -23.5 57.5T250 156q-34 0 -57 -23.5T170 75Z"
