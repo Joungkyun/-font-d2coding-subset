@@ -9,12 +9,12 @@ subset:
 	done
 
 woff2:
-	for f in $$( ls subsets/*.{ttf,otf} 2> /dev/null );  \
-	do                                                   \
-		grep "\.otf" <<< "$$f" && f=$${f//subsets/font}; \
-		./scripts/make-webify $$( realpath $$f )         \
-		    -t woff2                                     \
-		    -s $$( realpath ./subsets );                 \
+	for f in $$( ls subsets/*.{ttf,otf} 2> /dev/null );   \
+	do                                                    \
+		grep "\.otf" <<< "$$f" && f=$${f//subsets/fonts}; \
+		./scripts/make-webify $$( realpath $$f )          \
+		    -t woff2                                      \
+		    -s $$( realpath ./subsets );                  \
 	done
 
 woff:
