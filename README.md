@@ -46,14 +46,14 @@ The D2Coding ___subset___ font is a lightweight font to facilitate use on the we
 4. Special characters that can be entered on the keyboard
 5. Special character area of KSX1001
 
-A subset of D2Coding fonts are already being distributed on other sites, but there is a problem that space characters are missing, so there is a problem that does not meet the purpose of using a fixed-width font. (There is a problem that the width of d2coding characters and whitespace characters are different) The d2coding subset distributed here solves the whitespace character problem. 
+A subset of D2Coding fonts are already being distributed on other sites, but ___there is a problem that space characters are missing, so there is a problem that does not meet the purpose of using a fixed-width font___. (There is a problem that the width of d2coding characters and whitespace characters are different) The d2coding subset distributed here solves the whitespace character problem. 
 
 
 For original and ligature fonts, use the following repository:
 
-Origianl D2Coding Webfont: http://github.com/Joungkyun/font-d2coding
-Origianl D2Coding ligature Webfont: http://github.com/Joungkyun/font-d2coding-ligature
-D2Coding ligature subset Webfont: http://github.com/Joungkyun/font-d2coding-ligature-subset
+- Origianl D2Coding Webfont: http://github.com/Joungkyun/font-d2coding
+- Origianl D2Coding ligature Webfont: http://github.com/Joungkyun/font-d2coding-ligature
+- D2Coding ligature subset Webfont: http://github.com/Joungkyun/font-d2coding-ligature-subset
 
 
 ## Installation
@@ -99,7 +99,7 @@ In the header section of the HTML document, add CSS ___@font-face___ as follow:
        url('D2Coding-subset.svg') format('svg');
 }
 @font-face {
-  font-family: 'D2 coding';
+  font-family: 'D2 coding subset';
   font-style: normal;
   font-weight: 700;
   src: url('D2CodingBold-subset.eot');
