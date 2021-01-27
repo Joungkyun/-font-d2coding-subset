@@ -1,0 +1,124 @@
+#!/bin/bash
+
+
+# {{{ help ()
+help () {
+	cat <<-EOL
+		$0 :: make subset font utility
+
+		Usage: $0 [option] font_name
+		Options:
+		         -f|--file     path of subset file
+		         -h|--help     print this help messages
+		         -t|--text     set subset strings
+		         -s|--save     saved path of output file
+
+		The -t and -f options cannot be used at the same time.
+
+	EOL
+	exit 1
+}
+#}}}
+
+# {{{ OPTION processing
+file=""
+text=""
+
+opts=$( getopt -u -o f:ht:s: -l file:,help,text:,save: -- $* )
+[[ $? != 0 ]] && help
+
+set -- ${opts}
+for opt
+do
+	case "${opt}" in
+		-f|--file)
+			file="${2}"
+
+			[[ ! -f ${file} ]] && {
+				echo "[ERROR] File \"${file}\" could not be found" 1>&2
+				exit 1
+			}
+
+			shift; shift
+			;;
+		-h|--help)
+			help
+			;;
+		-t|--text)
+			text="${2}"
+
+			[[ ! -f ${file} ]] && {
+				echo "[ERROR] -t option cannot be empty" 1>&2
+				exit 1
+			}
+
+			shift; shift
+			;;
+		-s|--save)
+			save="${2}"
+			shift; shift
+			;;
+		--)
+			shift; break
+			;;
+	esac
+done
+
+[[ -n ${file} && -n ${text} ]] && {
+	echo "[ERROR] The -t and -f options cannot be used at the same time." 1>&2
+	help
+	exit 1
+}
+
+(( $# != 1 )) && help
+font="${1}"
+
+[[ ! -f ${font} ]] && {
+	echo "[ERROR] '${font}' could not be found" 1>&2
+	exit 1
+}
+
+# remove file extension
+fontdir="$( dirname "${font}" )"
+fontname="$( basename "${font%.*}" )"
+fontext="${font##*.}"
+
+if [[ -n ${save} ]]; then
+	[[  ! -d ${save} ]] && mkdir -p "${save}"
+else
+	save="${fontdir}"
+fi
+
+[[ -n ${file} ]]                    \
+	&& subset="--text-file='${file}'" \
+	|| subset="--text='${text}'"
+
+# }}}
+
+#cat <<-EOL
+eval "
+pyftsubset "${font}"                                         \
+	--output-file="${save}/${fontname}-subset.${fontext}"    \
+	${subset}                                                \
+	--layout-features='*'                                    \
+	--glyph-names                                            \
+	--symbol-cmap                                            \
+	--legacy-cmap                                            \
+	--notdef-glyph                                           \
+	--notdef-outline                                         \
+	--recommended-glyphs                                     \
+	--name-legacy                                            \
+	--drop-tables=                                           \
+	--name-IDs='*'                                           \
+	--name-languages='*'
+"
+#EOL
+
+exit $?
+
+#
+# Embeded VIM Configurations
+# The vim embeded setting requires that "set modeline" is set in /etc/vimrc or
+# ~ /.vimrc.
+# vim: filetype=sh noet si sw=4 ts=4 fdm=marker
+#

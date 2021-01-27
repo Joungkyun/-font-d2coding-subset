@@ -1,0 +1,151 @@
+#!/bin/bash
+
+# {{{ help ()
+help () {
+	cat <<-EOL
+		$0 :: make woff or woff2 converter
+
+		Usage: $0 [option] font_name
+		Options:
+		         -f|--file     path of subset file
+		         -h|--help     print this help messages
+		         -t|--type     support woff, woff2, svg, eof [default: woff2]
+		         -s|--save     saved path of output file
+
+	EOL
+	exit 1
+}
+#}}}
+
+# {{{ woff_compress ()
+woff_compress () {
+	grep "subset" <<< "${fontname}" \
+		&& subname=""               \
+		|| subname="-subset"
+
+	eval "
+		pyftsubset "${font}"                            \
+			--flavor="${type:-woff2}"                   \
+			${zopfli_opt}                               \
+			--text-file='${file}'                       \
+			--output-file="${save}/${fontname}${subname}.${type}" \
+			--layout-features='*'                       \
+			--glyph-names                               \
+			--symbol-cmap                               \
+			--legacy-cmap                               \
+			--notdef-glyph                              \
+			--notdef-outline                            \
+			--recommended-glyphs                        \
+			--name-legacy                               \
+			--drop-tables=                              \
+			--name-IDs='*'                              \
+			--name-languages='*'
+	"
+
+	return $?
+}
+# }}}
+
+# {{{ OPTION processing
+file=""
+text=""
+type=""
+
+opts=$( getopt -u -o f:ht:s: -l file:help,type:,save: -- $* )
+[[ $? != 0 ]] && help
+
+set -- ${opts}
+for opt
+do
+	case "${opt}" in
+		-f|--file)
+			file="${2}"
+
+			[[ ! -f ${file} ]] && {
+				echo "[ERROR] File \"${file}\" could not be found" 1>&2
+				exit 1
+			}
+
+			shift; shift
+			;;
+		-h|--help)
+			help
+			;;
+		-t|--type)
+			case "${2}" in
+				eot|svg|woff|woff2)
+					type="${2}"
+					;;
+				*)
+					echo -n "[ERROR] The -t option can only be used with values "
+					echo "eot, svg, woff, and woff2." 1>&2
+					help
+			esac
+
+			shift; shift
+			;;
+		-s|--save)
+			save="${2}"
+			shift; shift
+			;;
+		--)
+			shift; break
+			;;
+	esac
+done
+
+(( $# != 1 )) && help
+font="${1}"
+
+[[ ! -f ${font} ]] && {
+	echo "[ERROR] '${font}' could not be found" 1>&2
+	exit 1
+}
+
+# remove file extension
+fontdir="$( dirname "${font}" )"
+fontname="$( basename "${font%.*}" )"
+fontext="${font##*.}"
+
+if [[ -n ${save} ]]; then
+	[[  ! -d ${save} ]] && mkdir -p "${save}"
+else
+	save="${fontdir}"
+fi
+
+# }}}
+
+case "${type}" in
+	woff)
+		zopfli_opt="--with-zopfli"
+		woff_compress
+		;;
+	woff2)
+		if [[ ${fontext} != "ttf" ]]; then
+			woff_compress
+		else
+			woff2_compress "${font}"
+			[[ ${save} != ${fontdir} ]] && \
+				mv -f ${fontdir}/${fontname}.woff2 ${save}/
+		fi
+		;;
+	eot)
+		mkeot "${font}" > ${save}/${fontname}.eot
+		;;
+	svg)
+		webify --no-eot --no-woff "${font}"
+		[[ ${save} != ${fontdir} ]] && \
+			mv -f ${fontdir}/${fontname}.woff2 ${save}/
+		;;
+	*)
+		printf "[ERROR] '%s' is unsupported" "${type}" 1>&2
+		help
+esac
+
+exit 0
+#
+# Embeded VIM Configurations
+# The vim embeded setting requires that "set modeline" is set in /etc/vimrc or
+# ~ /.vimrc.
+# vim: filetype=sh noet si sw=4 ts=4 fdm=marker
+#
