@@ -119,7 +119,7 @@ Adding to CSS:
 
 ```css
 body {
-	font-family: D2Coding, 'D2 coding subnset', monosapce;
+	font-family: D2Coding, 'D2 coding subnset', monospace;
 }
 ```
 
